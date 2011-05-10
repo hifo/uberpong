@@ -3,6 +3,10 @@ var main_loop;
 
 var keys = {};
 var wall_active;
+var TOP = 1;
+var BOTTOM = 2;
+var RIGHT = 3;
+var LEFT = 4;
 
 var player;
 
@@ -19,17 +23,34 @@ function Ball () {
 Ball.prototype.update =
     function () {
     Game_Object.prototype.update.call (this);
-    if(this.touching(bottomWall)){
-	ball.vy =-5;
-    } else if(this.touching(topWall)){
-	ball.vy = 5;
-    } else if(this.touching(leftWall)){
-	ball.vx = 5;
-    } else if(this.touching(rightWall)){
-	ball.vx = -5;
+    if(this.touching(bottomWall) && wall_active==BOTTOM){
+		ball.vy =-5;
+    } else if(this.touching(topWall) && wall_active==TOP){
+		ball.vy = 5;
+    } else if(this.touching(leftWall) && wall_active==LEFT){
+		ball.vx = 5;
+    } else if(this.touching(rightWall) && wall_active==RIGHT){
+		ball.vx = -5;
     }
-    	
+    
+	if(this.touching(bottomWall) && wall_active != BOTTOM){
+		loss();
+	} else if(this.touching(topWall) && wall_active != TOP){
+		loss();
+	} else if(this.touching(leftWall) && wall_active != LEFT){
+		loss();
+	} else if(this.touching(rightWall) && wall_active != RIGHT){
+		loss();
+	}
 };
+
+function victory () {
+    game_messages.push (new Game_Msg ("You win!", "rgb(0, 0, 0)"));
+}
+
+function loss(){
+	game_messages.push ( new Game_Msg ("You lose!", "rgb(0,0,0)"));
+}
 
 Wall.prototype = new Game_Object;
 function Wall (align,x,y) {
@@ -68,6 +89,8 @@ function draw () {
 	leftWall.draw (ctx);
 	break;
     }
+	
+	draw_game_message (ctx, canvas);
 }
 
 function update () {
