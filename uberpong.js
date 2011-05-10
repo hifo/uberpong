@@ -22,11 +22,11 @@ Ball.prototype.update =
     if(this.touching(bottomWall)){
 	ball.vy =-5;
     } else if(this.touching(topWall)){
-	ball.vy *= 5;
+	ball.vy = 5;
     } else if(this.touching(leftWall)){
-	ball.vx *= -5;
+	ball.vx = 5;
     } else if(this.touching(rightWall)){
-	ball.vx *= 5;
+	ball.vx = -5;
     }
     	
 };
@@ -34,9 +34,9 @@ Ball.prototype.update =
 Wall.prototype = new Game_Object;
 function Wall (align,x,y) {
     if(align){
-	Game_Object.call (this, "barrier.png", 1, x,y,0,"rectangle");
+	Game_Object.call (this, "barrier.png", 1, x,y,0,"rect");
     } else{
-	Game_Object.call (this, "vertical_barrier.png", 1, x,y,0,"rectangle");
+	Game_Object.call (this, "vertical_barrier.png", 1, x,y,0,"rect");
     }
 }
 Wall.prototype.update =
