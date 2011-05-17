@@ -33,13 +33,13 @@ Ball.prototype.update =
     function () {
     Game_Object.prototype.update.call (this);
     if(this.touching(bottomPaddle) && Paddle_active==BOTTOM){
-		ball.vy =-5;
+		this.vy =-5;
     } else if(this.touching(topPaddle) && Paddle_active==TOP){
-		ball.vy = 5;
+		this.vy = 5;
     } else if(this.touching(leftPaddle) && Paddle_active==LEFT){
-		ball.vx = 5;
+		this.vx = 5;
     } else if(this.touching(rightPaddle) && Paddle_active==RIGHT){
-		ball.vx = -5;
+		this.vx = -5;
     }
     
 	if(this.isTouchingBorder(BOTTOM) && Paddle_active != BOTTOM){
@@ -123,12 +123,14 @@ function draw () {
 function update () {
 	for (a in ball) {
 		ball[a].update();
+		console.log("Updated ball"+a);
     }
 		
 	duration++;
     $("#duration").text (show_time ());
 	
-	if(duration % (60 * FRAME_RATE) == 0){
+	if(duration % (20 * FRAME_RATE) == 0){
+		console.log("Added new ball");
 		ball[numBalls] = new Ball();
 		numBalls++;
 	}
