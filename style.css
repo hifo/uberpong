@@ -1,4 +1,7 @@
-h1 { text-align: center }
+h1 { text-align: center; color : white }
+body { background-color : black }
+div.duration { color : white }
+div.numBalls { color : white }
 div.canvas { text-align: center }
 canvas { border: thick outset lightgray }
 div.loglabel { font-weight: bold }

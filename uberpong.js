@@ -23,8 +23,8 @@ var numBalls = 0;
 Ball.prototype = new Game_Object;
 function Ball () {
     Game_Object.call (this, "sphere.png", 1,
-                      100,
-                      100, 0,
+                      200,
+                      150, 0,
                       "circle");
     this.vx = 5;
     this.vy = 5;
@@ -129,7 +129,7 @@ function update () {
 	duration++;
     $("#duration").text (show_time ());
 	
-	if(duration % (20 * FRAME_RATE) == 0){
+	if(duration % (60 * FRAME_RATE) == 0){
 		console.log("Added new ball");
 		ball[numBalls] = new Ball();
 		numBalls++;
@@ -176,8 +176,24 @@ function key_release (event) {
     }
 }
 
+function load_sound () {
+	music = new Audio ("Bach Brandenburg Concerto 3 (1st and 2nd movements).mp3");
+}
+
+function toggle_mute (event) {
+    if (music.volume == 0) {
+	music.volume = 1;
+    sound_fx_muted = false;
+    } else {
+	music.volume = 0;
+    sound_fx_muted = true;
+    }
+}
+
 function init () {
     canvas = document.getElementById("canvas");
+	
+	load_sound();
 
     ball[numBalls] = new Ball();
 	numBalls++;
@@ -188,6 +204,9 @@ function init () {
     rightPaddle = new Paddle(0,canvas.width, 0);
 
     $(".loglabel").click (function () { $(this).toggle (); });
+	
+	music.loop = true;
+	music.play();
 
     main_loop = setInterval (update, 1000.0 / FRAME_RATE);
 }
