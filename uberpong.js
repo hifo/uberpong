@@ -3,12 +3,17 @@ var main_loop;
 
 var keys = {};
 var wall_active;
+
 var TOP = 1;
 var BOTTOM = 2;
 var RIGHT = 3;
 var LEFT = 4;
 
+var music;
+
 var player;
+
+var directions = {-5,5};
 
 var ball;
 Ball.prototype = new Game_Object;
@@ -44,12 +49,27 @@ Ball.prototype.update =
 	}
 };
 
+function halt (stopmusic) {
+    clearInterval (main_loop);
+    if (stopmusic != false) {
+	//music.pause ();
+	//music.addEventListener ('ended', function () {
+	//			}, false);
+    }
+}
+
+function show_time () {
+    var seconds = Math.floor (duration / FRAME_RATE);
+    return sprintf ("%02d:%02d", Math.floor (seconds / 60), seconds % 60);
+}
+
 function victory () {
-    game_messages.push (new Game_Msg ("You win!", "rgb(0, 0, 0)"));
+    game_messages.push (new Game_Msg ("You win!", "rgb(255, 255, 255)"));
 }
 
 function loss(){
-	game_messages.push ( new Game_Msg ("You lose!", "rgb(0,0,0)"));
+	game_messages.push ( new Game_Msg ("You lose!", "rgb(255,255,255)"));
+	halt(false);
 }
 
 Wall.prototype = new Game_Object;
@@ -95,6 +115,8 @@ function draw () {
 
 function update () {
     ball.update();
+	
+//	$("#duration").text (show_time ());
 
     draw();
 }
@@ -104,16 +126,16 @@ function key_press (event) {
     keys[chr(event.which)] = true;
     switch (event.which) {
     case KEY.UP:
-	wall_active = 1;
+	wall_active = TOP;
 	break;
     case KEY.DOWN:
-	wall_active = 2;
+	wall_active = BOTTOM;
 	break;
     case KEY.RIGHT:
-	wall_active = 3;
+	wall_active = RIGHT;
 	break;
     case KEY.LEFT:
-	wall_active = 4;
+	wall_active = LEFT;
 	break;
     }
 }
