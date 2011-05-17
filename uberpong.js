@@ -42,13 +42,13 @@ Ball.prototype.update =
 		ball.vx = -5;
     }
     
-	if(this.y >= canvas.height && Paddle_active != BOTTOM){
+	if(this.isTouchingBorder(BOTTOM) && Paddle_active != BOTTOM){
 		loss();
-	} else if(this.y <= 0 && Paddle_active != TOP){
+	} else if(this.isTouchingBorder(TOP) && Paddle_active != TOP){
 		loss();
-	} else if(this.x <= 0 && Paddle_active != LEFT){
+	} else if(this.isTouchingBorder(LEFT) && Paddle_active != LEFT){
 		loss();
-	} else if(this.x >= canvas.width && Paddle_active != RIGHT){
+	} else if(this.isTouchingBorder(RIGHT) && Paddle_active != RIGHT){
 		loss();
 	}
 };

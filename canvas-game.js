@@ -339,3 +339,27 @@ Game_Object.prototype.update =
 	this.try_move (this.vx, 0);
 	this.try_move (0, this.vy);
     };
+Game_Object.prototype.isTouchingBorder =
+	function (border) {
+	switch(border) {
+		case 1: //top
+			if( this.y <= 0 ){
+				return true;
+			}
+		case 2: //bottom
+			if( this.y >= canvas.height ){
+				return true;
+			}
+		case 4: //left
+			if( this.x <= 0 ){
+				return true;
+			}
+		case 3: //right
+ 			if( this.x >= canvas.width ){
+				return true;
+			} else{
+				return false
+			}
+			break;
+		}
+	};
