@@ -2,7 +2,9 @@ var canvas;
 var main_loop;
 
 var keys = {};
-var wall_active;
+var Paddle_active;
+
+var FRAME_RATE = 30;
 
 var TOP = 1;
 var BOTTOM = 2;
@@ -13,9 +15,11 @@ var music;
 
 var player;
 
-var directions = {-5,5};
+var duration = 0;
 
-var ball;
+var ball = {};
+var numBalls = 0;
+
 Ball.prototype = new Game_Object;
 function Ball () {
     Game_Object.call (this, "sphere.png", 1,
@@ -28,23 +32,23 @@ function Ball () {
 Ball.prototype.update =
     function () {
     Game_Object.prototype.update.call (this);
-    if(this.touching(bottomWall) && wall_active==BOTTOM){
+    if(this.touching(bottomPaddle) && Paddle_active==BOTTOM){
 		ball.vy =-5;
-    } else if(this.touching(topWall) && wall_active==TOP){
+    } else if(this.touching(topPaddle) && Paddle_active==TOP){
 		ball.vy = 5;
-    } else if(this.touching(leftWall) && wall_active==LEFT){
+    } else if(this.touching(leftPaddle) && Paddle_active==LEFT){
 		ball.vx = 5;
-    } else if(this.touching(rightWall) && wall_active==RIGHT){
+    } else if(this.touching(rightPaddle) && Paddle_active==RIGHT){
 		ball.vx = -5;
     }
     
-	if(this.touching(bottomWall) && wall_active != BOTTOM){
+	if(this.y >= 480 && Paddle_active != BOTTOM){
 		loss();
-	} else if(this.touching(topWall) && wall_active != TOP){
+	} else if(this.y <= 0 && Paddle_active != TOP){
 		loss();
-	} else if(this.touching(leftWall) && wall_active != LEFT){
+	} else if(this.x <= 0 && Paddle_active != LEFT){
 		loss();
-	} else if(this.touching(rightWall) && wall_active != RIGHT){
+	} else if(this.x >= 640 && Paddle_active != RIGHT){
 		loss();
 	}
 };
@@ -72,15 +76,15 @@ function loss(){
 	halt(false);
 }
 
-Wall.prototype = new Game_Object;
-function Wall (align,x,y) {
+Paddle.prototype = new Game_Object;
+function Paddle (align,x,y) {
     if(align){
 	Game_Object.call (this, "barrier.png", 1, x,y,0,"rect");
     } else{
 	Game_Object.call (this, "vertical_barrier.png", 1, x,y,0,"rect");
     }
 }
-Wall.prototype.update =
+Paddle.prototype.update =
     function (){
     Game_Object.prototype.update.call(this);
 };
@@ -93,30 +97,41 @@ function draw () {
     ctx.fillRect (0, 0, canvas.width, canvas.height);
 
     ctx.restore ();
+	
+	for (a in ball) {
+		ball[a].draw (ctx);
+    }
 
-    ball.draw (ctx);
-    switch(wall_active){
+    switch(Paddle_active){
     case 1:
-	topWall.draw (ctx);
-	break;
+		topPaddle.draw (ctx);
+		break;
     case 2:
-	bottomWall.draw (ctx);
-	break;
+		bottomPaddle.draw (ctx);
+		break;
     case 3:
-	rightWall.draw (ctx);
-	break;
+		rightPaddle.draw (ctx);
+		break;
     case 4:
-	leftWall.draw (ctx);
-	break;
+		leftPaddle.draw (ctx);
+		break;
     }
 	
 	draw_game_message (ctx, canvas);
 }
 
 function update () {
-    ball.update();
+	for (a in ball) {
+		ball[a].update();
+    }
+		
+	duration++;
+    $("#duration").text (show_time ());
 	
-//	$("#duration").text (show_time ());
+	if(duration % (60 * FRAME_RATE) == 0){
+		ball[numBalls] = new Ball();
+		numBalls++;
+	}
 
     draw();
 }
@@ -126,17 +141,17 @@ function key_press (event) {
     keys[chr(event.which)] = true;
     switch (event.which) {
     case KEY.UP:
-	wall_active = TOP;
-	break;
+		Paddle_active = TOP;
+		break;
     case KEY.DOWN:
-	wall_active = BOTTOM;
-	break;
+		Paddle_active = BOTTOM;
+		break;
     case KEY.RIGHT:
-	wall_active = RIGHT;
-	break;
+		Paddle_active = RIGHT;
+		break;
     case KEY.LEFT:
-	wall_active = LEFT;
-	break;
+		Paddle_active = LEFT;
+		break;
     }
 }
 function key_release (event) {
@@ -153,7 +168,7 @@ function key_release (event) {
     case KEY.DOWN:
     case KEY.RIGHT:
     case KEY.LEFT:
-	wall_active = 0;
+	Paddle_active = 0;
 	break;
     }
 }
@@ -161,12 +176,13 @@ function key_release (event) {
 function init () {
     canvas = document.getElementById("canvas");
 
-    ball = new Ball();
-    wall_active = 0;
-    topWall = new Wall(1,0,0);
-    bottomWall = new Wall(1,0,canvas.height);
-    leftWall = new Wall(0,0, 0);
-    rightWall = new Wall(0,canvas.width, 0);
+    ball[numBalls] = new Ball();
+	numBalls++;
+    Paddle_active = 0;
+    topPaddle = new Paddle(1,0,0);
+    bottomPaddle = new Paddle(1,0,canvas.height);
+    leftPaddle = new Paddle(0,0, 0);
+    rightPaddle = new Paddle(0,canvas.width, 0);
 
     $(".loglabel").click (function () { $(this).toggle (); });
 
