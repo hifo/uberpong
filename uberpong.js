@@ -42,13 +42,13 @@ Ball.prototype.update =
 		ball.vx = -5;
     }
     
-	if(this.y >= 480 && Paddle_active != BOTTOM){
+	if(this.y >= canvas.height && Paddle_active != BOTTOM){
 		loss();
 	} else if(this.y <= 0 && Paddle_active != TOP){
 		loss();
 	} else if(this.x <= 0 && Paddle_active != LEFT){
 		loss();
-	} else if(this.x >= 640 && Paddle_active != RIGHT){
+	} else if(this.x >= canvas.width && Paddle_active != RIGHT){
 		loss();
 	}
 };
@@ -132,6 +132,7 @@ function update () {
 		ball[numBalls] = new Ball();
 		numBalls++;
 	}
+	$("#numBalls").text (numBalls.toString());
 
     draw();
 }
